@@ -280,6 +280,8 @@ class AIQASystemGUI:
         if user_input in ["退出", "exit", "EXIT"]:
             self.append_message("你", user_input)
             self.append_message("系统", "对话结束，感谢使用！")
+            # 保存用户提问历史到文件
+            self.save_history()
             self.input_entry.config(state=tk.DISABLED)
             self.send_btn.config(state=tk.DISABLED)
             self.status_bar.config(text="对话已结束")
@@ -307,6 +309,30 @@ class AIQASystemGUI:
         
         # 清空输入框
         self.input_entry.delete(0, tk.END)
+    
+    def save_history(self):
+        """将用户提问历史保存到文件"""
+        if not self.user_history:
+            return
+        
+        import datetime
+        
+        timestamp = datetime.datetime.now().strftime("%Y%m%d_%H%M%S")
+        filename = f"question_history_{timestamp}.txt"
+        
+        try:
+            with open(filename, "w", encoding="utf-8") as f:
+                f.write("=" * 50 + "\n")
+                f.write(f"AI问答系统提问记录\n")
+                f.write(f"保存时间：{datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S')}\n")
+                f.write("=" * 50 + "\n\n")
+                for idx, question in enumerate(self.user_history, 1):
+                    f.write(f"{idx}. {question}\n")
+            
+            self.append_message("系统", f"提问记录已保存到文件：{filename}")
+            self.status_bar.config(text=f"对话已结束，记录已保存")
+        except Exception as e:
+            self.append_message("系统", f"保存记录失败：{str(e)}")
     
     def clear_history(self):
         """清空对话历史"""
