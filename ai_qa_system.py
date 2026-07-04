@@ -232,6 +232,9 @@ class AIQASystemGUI:
         )
         self.history_text.pack(fill=tk.BOTH, expand=True, padx=10, pady=(5, 10))
         
+        # 在对话历史区域显示初始提示信息
+        self.append_message("系统", "欢迎使用人工智能基础问答系统！\n您可以输入任何关于人工智能基础的问题。\n输入'退出'结束对话。")
+        
         # 底部状态栏
         self.status_bar = tk.Label(
             self.root,
